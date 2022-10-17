@@ -36,21 +36,36 @@ int main()
         return 0;
     }
     std::cout << "连接服务器成功!!!" << std::endl;
-    //3,接收服务器信息recv
-    char recvBuf[256] = {};
-    //接收的数据长度
-    int nLen = recv(_sock, recvBuf,256, 0);
-    if (nLen == 0)
+
+    while (true)
     {
-        std::cout << "接收服务器信息" << std::endl;
-        return 0;
-    }
+        //3输入请求命令
+        char cmdBuf[128] = {};
+        scanf("%s", cmdBuf);
+        //4,处理请求命令
+        if ( 0 == strcmp(cmdBuf, "exit"))
+        {
+            std::cout << "收到exit命令，任务结束" << std::endl;
+            break;
+        }
+        //5,向服务器发送请求命令
+        send(_sock, cmdBuf, strlen(cmdBuf) + 1, 0);
+        //6,接收服务器信息recv
+        char recvBuf[128] = {};
+        //接收的数据长度
+        int nLen = recv(_sock, recvBuf,128, 0);
+        if (nLen == 0)
+        {
+            std::cout << "接收服务器信息失败!!!" << std::endl;
+            break;
+        }
         std::cout << "接收到数据:" << recvBuf << std::endl;
-   
+    }
     //4,closesocket 关闭套接字
     closesocket(_sock);
     //清除windows socket环境
     WSACleanup();
+    std::cout << "退出，任务结束" << std::endl;
     getchar();
     return 0;
 }
