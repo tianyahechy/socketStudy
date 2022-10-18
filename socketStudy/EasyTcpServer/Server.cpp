@@ -6,6 +6,11 @@
 #include <WinSock2.h>
 #include <iostream>
 
+struct DataPackage
+{
+    int age;
+    char name[32];
+};
 
 int main()
 {
@@ -67,17 +72,11 @@ int main()
         }
         std::cout << "收到命令:" << _recvBuf << std::endl;
         //6,处理请求
-        if (0 == strcmp(_recvBuf, "getName"))
+        if (0 == strcmp(_recvBuf, "getInfo"))
         {
             //7，send 向客户端发送一条数据
-            char msgBuf[] = "feige";
-            send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
-        }
-        else if (0 == strcmp(_recvBuf, "getAge"))
-        {
-            //7，send 向客户端发送一条数据
-            char msgBuf[] = "40";
-            send(_cSock, msgBuf, strlen(msgBuf) + 1, 0);
+            DataPackage info = { 40,"feige" };
+            send(_cSock, (const char*)&info, sizeof(DataPackage), 0);
         }
         else
         {

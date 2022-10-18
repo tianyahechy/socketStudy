@@ -6,6 +6,11 @@
 #include <WinSock2.h>
 #include <iostream>
 
+struct DataPackage
+{
+    int age;
+    char name[32];
+};
 int main()
 {
     WORD ver = MAKEWORD(2, 2);
@@ -59,7 +64,8 @@ int main()
             std::cout << "接收服务器信息失败!!!" << std::endl;
             break;
         }
-        std::cout << "接收到数据:" << recvBuf << std::endl;
+        DataPackage* dp = (DataPackage*)recvBuf;
+        std::cout << "接收到数据:年龄=" << dp->age <<",姓名="<<dp->name << std::endl;
     }
     //4,closesocket 关闭套接字
     closesocket(_sock);
